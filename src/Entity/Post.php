@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
@@ -21,15 +22,24 @@ class Post
     private ?int $id = null; // @phpstan-ignore-line
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 5000)]
     private ?string $text = null;
 
     #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\DateTime]
+    #[Assert\GreaterThanOrEqual('today')]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\DateTime]
+    #[Assert\GreaterThan('today')]
     private ?\DateTimeImmutable $scheduledAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
