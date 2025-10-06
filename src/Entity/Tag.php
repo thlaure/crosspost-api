@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\TagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,11 +16,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 class Tag
 {
+    #[ApiProperty(
+        identifier: true,
+        description: 'Unique identifier for the product.',
+        openapiContext: [
+            'type' => 'integer',
+            'example' => 1
+        ]
+    )]
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null; // @phpstan-ignore-line
 
+    #[ApiProperty(
+        description: 'Label of the tag',
+        openapiContext: [
+            'type' => 'string',
+            'example' => 'Symfony',
+        ]
+    )]
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
@@ -28,6 +44,13 @@ class Tag
     /**
      * @var Collection<int, Post>
      */
+    #[ApiProperty(
+        description: 'Posts associated with the tag',
+        openapiContext: [
+            'type' => 'array',
+            'example' => [],
+        ]
+    )]
     #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'tags')]
     private Collection $posts;
 
